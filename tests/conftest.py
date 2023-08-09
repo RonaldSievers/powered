@@ -24,14 +24,15 @@ def service_info():
         weight=0,
     )
 
+
 @pytest.fixture()
 def power_device(service_info):
     return PowerDevice(
-        server = "192.168.86.249",
-        port = 80,
-        api_enabled = True,
-        path = '/api/v1',
-        serial = '5c2faf0a4066',
-        product_type = 'HWE-P1',
-        product_name = 'P1 meter'
+        server="192.168.86.249",
+        port=80,
+        api_enabled=True,
+        path="/api/v1",
+        serial="5c2faf0a4066",
+        product_type="HWE-P1",
+        product_name="P1 meter",
     )

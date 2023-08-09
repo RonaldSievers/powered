@@ -2,6 +2,8 @@ from pydantic import BaseModel
 
 from requests import request
 
+from exceptions import MeterDataParsingException
+
 
 class ConsumptionMetrics(BaseModel):
     active_power_w: int
@@ -30,8 +32,12 @@ class PowerDevice(BaseModel):
     def metrics(self) -> ConsumptionMetrics:
         api_request = request("GET", self.endpoint)
         api_response = api_request.json()
-        api_metrics = ConsumptionMetrics(
-            active_power_w=api_response["active_power_w"],
-            total_power_import_kwh=api_response["total_power_import_kwh"],
-        )
+        try:
+            api_metrics = ConsumptionMetrics(
+                active_power_w=api_response["active_power_w"],
+                total_power_import_kwh=api_response["total_power_import_kwh"],
+            )
+        except (ValueError, KeyError) as e:
+            raise MeterDataParsingException()
+
         return api_metrics
