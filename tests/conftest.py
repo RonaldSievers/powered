@@ -1,6 +1,6 @@
 import pytest
 from zeroconf import ServiceInfo
-from model import PowerDevice
+from model import P1_meter
 
 
 @pytest.fixture()
@@ -27,7 +27,7 @@ def service_info():
 
 @pytest.fixture()
 def power_device(service_info):
-    return PowerDevice(
+    return P1_meter(
         server="192.168.86.249",
         port=80,
         api_enabled=True,

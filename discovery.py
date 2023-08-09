@@ -5,7 +5,7 @@ from zeroconf import ServiceBrowser, ServiceListener, Zeroconf, ServiceInfo
 
 from typing import Optional, Union, List, Callable
 
-from model import PowerDevice
+from model import P1_meter
 
 from log_configuration import logger
 
@@ -42,9 +42,9 @@ def _to_ascii(value: Union[str, bytes, None]) -> str:
     return value
 
 
-def discover_service(
+def discover_p1_meter(
     polling_function: Callable = _poll_for_services,
-) -> Optional[PowerDevice]:
+) -> Optional[P1_meter]:
     services_catalogue.clear()
     zeroconf = Zeroconf()
     listener = HWEnergyListener()
@@ -62,7 +62,7 @@ def discover_service(
     # We need to convert this as DNS lookup on the private host network doesn't work in the docker container
     ip_address = inet_ntoa(address)
 
-    return PowerDevice(
+    return P1_meter(
         server=ip_address,
         port=detected_service.port or 0,
         api_enabled=bool(props[b"api_enabled"]),

@@ -1,19 +1,22 @@
 from log_configuration import logger
-from discovery import discover_service
+from discovery import discover_p1_meter
 
+from time import sleep
 
 def main():
     logger.info(
         "Powered .. by Ronald Sievers. Open source so feel free to modify and copy as much you'd like."
     )
-    logger.info("Detecting HomeWizard P1 Meter in your network ..")
-    device = discover_service()
-    if not device:
+    p1_meter = discover_p1_meter()
+    if not p1_meter:
         logger.error("Sorry, unable to locate the device. Are you on the same network?")
         exit(1)
-    logger.info(f"Device located ({device})")
-    logger.info(f"Metrics retrieved: {device.metrics}")
+    logger.info(f"P1 Meter found ({p1_meter})")
 
+    # for now, lets loop until infinity :D
+    while True:
+        logger.info(f"Metrics retrieved: {p1_meter.metrics}")
+        sleep(1)
 
 if __name__ == "__main__":
     main()

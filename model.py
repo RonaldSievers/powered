@@ -8,9 +8,10 @@ from exceptions import MeterDataParsingException
 class ConsumptionMetrics(BaseModel):
     active_power_w: int
     total_power_import_kwh: float
+    total_power_export_kwh: float
 
 
-class PowerDevice(BaseModel):
+class P1_meter(BaseModel):
     server: str
     port: int
     api_enabled: bool
@@ -36,6 +37,7 @@ class PowerDevice(BaseModel):
             api_metrics = ConsumptionMetrics(
                 active_power_w=api_response["active_power_w"],
                 total_power_import_kwh=api_response["total_power_import_kwh"],
+                total_power_export_kwh=api_response["total_power_export_kwh"]
             )
         except (ValueError, KeyError) as e:
             raise MeterDataParsingException()
