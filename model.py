@@ -20,26 +20,6 @@ class P1_meter(BaseModel):
     product_type: str
     product_name: str
 
-    def __eq__(self, other):
-        if other.__class__ is self.__class__:
-            return self.model_dump() == other.model_dump()
-        raise Exception("Trying to compare two different models")
-
     @property
-    def endpoint(self):
+    def endpoint(self) -> str:
         return f"http://{self.server}:{self.port}{self.path}/data"
-
-    @property
-    def metrics(self) -> ConsumptionMetrics:
-        api_request = request("GET", self.endpoint)
-        api_response = api_request.json()
-        try:
-            api_metrics = ConsumptionMetrics(
-                active_power_w=api_response["active_power_w"],
-                total_power_import_kwh=api_response["total_power_import_kwh"],
-                total_power_export_kwh=api_response["total_power_export_kwh"]
-            )
-        except (ValueError, KeyError) as e:
-            raise MeterDataParsingException()
-
-        return api_metrics

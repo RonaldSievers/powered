@@ -1,10 +1,28 @@
 import pytest
 from zeroconf import ServiceInfo
-from model import P1_meter
+from model import P1_meter, ConsumptionMetrics
 
 
 @pytest.fixture()
-def service_info():
+def mocked_api_response():
+    return dict(
+        active_power_w=1234,
+        total_power_import_kwh=9412.12,
+        total_power_export_kwh=4123.33,
+    )
+
+
+@pytest.fixture()
+def mocked_consume_metrics(mocked_api_response):
+    return ConsumptionMetrics(
+        active_power_w=mocked_api_response["active_power_w"],
+        total_power_import_kwh=mocked_api_response["total_power_import_kwh"],
+        total_power_export_kwh=mocked_api_response["total_power_export_kwh"],
+    )
+
+
+@pytest.fixture()
+def mocked_service_info():
     return ServiceInfo(
         addresses=[b"\xc0\xa8V\xf9"],
         host_ttl=120,
@@ -26,7 +44,7 @@ def service_info():
 
 
 @pytest.fixture()
-def power_device(service_info):
+def mocked_p1_meter(mocked_service_info):
     return P1_meter(
         server="192.168.86.249",
         port=80,
