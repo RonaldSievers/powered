@@ -9,7 +9,7 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
 
 # create file logger for longer term logging
-file_handler = logging.FileHandler("logs.txt")
+file_handler = logging.FileHandler("../logs.txt")
 file_handler.setLevel(logging.INFO)
 
 # create formatter

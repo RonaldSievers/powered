@@ -1,6 +1,6 @@
 from requests import request
-from model import P1_meter, ConsumptionMetrics
-from exceptions import MeterDataParsingException
+from powered.model import P1_meter, ConsumptionMetrics
+from powered.exceptions import MeterDataParsingException
 
 from typing import Dict, Callable
 

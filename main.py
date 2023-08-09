@@ -1,9 +1,8 @@
-from log_configuration import logger
-from discovery import discover_p1_meter
-
 from time import sleep
 
-from operations import get_metrics_from_p1_meter
+from powered.log_configuration import logger
+from powered.discovery import discover_p1_meter
+from powered.operations import get_metrics_from_p1_meter
 
 
 def main():

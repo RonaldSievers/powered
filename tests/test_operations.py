@@ -1,4 +1,4 @@
-from operations import get_metrics_from_p1_meter
+from powered.operations import get_metrics_from_p1_meter
 
 
 def test_get_metrics_from_p1_meter(

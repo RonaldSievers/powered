@@ -1,9 +1,5 @@
 from pydantic import BaseModel
 
-from requests import request
-
-from exceptions import MeterDataParsingException
-
 
 class ConsumptionMetrics(BaseModel):
     active_power_w: int

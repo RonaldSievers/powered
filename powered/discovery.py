@@ -5,9 +5,9 @@ from zeroconf import ServiceBrowser, ServiceListener, Zeroconf, ServiceInfo
 
 from typing import Optional, Union, List, Callable
 
-from model import P1_meter
+from powered.model import P1_meter
 
-from log_configuration import logger
+from powered.log_configuration import logger
 
 HWENERGY_TYPE = "_hwenergy._tcp.local."
 TIMEOUT_IN_SECONDS = 5

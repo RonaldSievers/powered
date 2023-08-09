@@ -1,6 +1,6 @@
 import pytest
 from zeroconf import ServiceInfo
-from model import P1_meter, ConsumptionMetrics
+from powered.model import P1_meter, ConsumptionMetrics
 
 
 @pytest.fixture()
