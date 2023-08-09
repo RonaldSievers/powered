@@ -7,6 +7,8 @@ from typing import Optional, Union, List, Callable
 
 from model import PowerDevice
 
+from log_configuration import logger
+
 HWENERGY_TYPE = "_hwenergy._tcp.local."
 TIMEOUT_IN_SECONDS = 5
 
@@ -28,6 +30,7 @@ def _poll_for_services() -> Optional[ServiceInfo]:
         local_tries += 1
         if local_tries > TIMEOUT_IN_SECONDS:
             return None
+        logger.info(f"Attempt #{local_tries} in discovering P1 meter..")
         sleep(1)
 
 
