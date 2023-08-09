@@ -10,9 +10,9 @@ of LED lights to indicate the power usage (being negative or positive).
 
 ### Interactions
 
-`make run` -- this will build the image first (targeted at ARM cpus) and then run it
+`make run` -- will run the latest version using docker compose (not detached) - use this on your raspberry pi!!
 
-`make push` -- build the image and push it to the repo
+`make push` -- build the image and push it to the repo (targeted at ARM cpus)
 
 `make test` -- run all unit tests
 

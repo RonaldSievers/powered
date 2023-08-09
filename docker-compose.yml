@@ -1,0 +1,7 @@
+version: '3'
+services:
+  powered:
+    container_name: powered
+    image: "derogativ/powered:1.0"
+    restart: unless-stopped
+    network_mode: host
