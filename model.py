@@ -17,6 +17,11 @@ class PowerDevice(BaseModel):
     product_type: str
     product_name: str
 
+    def __eq__(self, other):
+        if other.__class__ is self.__class__:
+            return self.model_dump() == other.model_dump()
+        raise Exception("Trying to compare two different models")
+
     @property
     def endpoint(self):
         return f"http://{self.server}:{self.port}{self.path}/data"
