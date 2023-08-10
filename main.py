@@ -24,7 +24,7 @@ def main(demo):
     # for now, lets loop until infinity :D
     while True:
         logger.info(
-            f"Metrics retrieved: {get_metrics_from_p1_meter(p1_meter=p1_meter, http_handler=demo_http_handler)}"
+            f"Metrics retrieved: {get_metrics_from_p1_meter(p1_meter=p1_meter, http_handler=demo_http_handler if demo else None)}"
         )
         sleep(1)
 
