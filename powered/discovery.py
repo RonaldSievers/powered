@@ -42,9 +42,10 @@ def _to_ascii(value: Union[str, bytes, None]) -> str:
     return value
 
 
-def discover_p1_meter(
-    polling_function: Callable = _poll_for_services,
-) -> Optional[P1_meter]:
+def discover_p1_meter(polling_function: Optional[Callable]) -> Optional[P1_meter]:
+    if not polling_function:
+        polling_function = _poll_for_services
+
     services_catalogue.clear()
     zeroconf = Zeroconf()
     listener = HWEnergyListener()

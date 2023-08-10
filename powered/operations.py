@@ -2,7 +2,7 @@ from requests import request
 from powered.model import P1_meter, ConsumptionMetrics
 from powered.exceptions import MeterDataParsingException
 
-from typing import Dict, Callable
+from typing import Dict, Callable, Optional
 
 
 def _http_handler(endpoint: str) -> Dict:
@@ -11,8 +11,11 @@ def _http_handler(endpoint: str) -> Dict:
 
 
 def get_metrics_from_p1_meter(
-    p1_meter: P1_meter, http_handler: Callable = _http_handler
+    p1_meter: P1_meter, http_handler: Optional[Callable]
 ) -> ConsumptionMetrics:
+    if not http_handler:
+        http_handler = _http_handler
+
     api_response = http_handler(p1_meter.endpoint)
 
     try:
