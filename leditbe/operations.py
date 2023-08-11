@@ -1,8 +1,10 @@
 from phue import Light
 from time import sleep
 
+from typing import List
 
-def rgb_to_xy(red, green, blue):
+
+def _rgb_to_xy(red, green, blue):
     """conversion of RGB colors to CIE1931 XY colors
     Formulas implemented from: https://gist.github.com/popcorn245/30afa0f98eea1c2fd34d
 
@@ -38,36 +40,23 @@ def rgb_to_xy(red, green, blue):
     return [x, y]
 
 
-def to_green(light: Light, brightness: int) -> Light:
+LIGHT_XY_RED = _rgb_to_xy(1.0, 0.5, 0.0)
+LIGHT_XY_GREEN = _rgb_to_xy(0.0, 1.0, 0.8)
+LIGHT_XY_WHITE = _rgb_to_xy(1.0, 1.0, 1.0)
+
+
+def change_light(light: Light, brightness: int, xy: List[float]) -> Light:
     light.on = True
     light.transitiontime = 1
     light.brightness = brightness
-    light.xy = rgb_to_xy(0.0, 1.0, 0.8)
+    light.xy = xy
     return light
 
 
 def blink(light: Light) -> Light:
-    light.on = True
-    light.brightness = 255
-    light.transitiontime = 2
-    light.xy = rgb_to_xy(1.0, 1.0, 1.0)
-
+    change_light(light, 255, LIGHT_XY_WHITE)
     for n in range(3):
         light.on = n % 2 == 1
         sleep(0.25)
-
     light.on = True
-    return light
-
-
-def to_red(light: Light, brightness: int) -> Light:
-    light.on = True
-    light.transitiontime = 1
-    light.brightness = brightness
-    light.xy = rgb_to_xy(1.0, 0.5, 0.0)
-    return light
-
-
-def set_brightness(light: Light, value: int) -> Light:
-    light.brightness = value
     return light

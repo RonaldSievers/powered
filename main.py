@@ -57,12 +57,13 @@ def main(demo):
         perc_value = value / max_value
         actual_brigntness = int(max_brightness * perc_value)
 
-        if metrics.active_power_w < 0:
-            # producing energy
-            leditbe.to_green(light, actual_brigntness)
-        else:
-            # consuming energy
-            leditbe.to_red(light, actual_brigntness)
+        leditbe.change_light(
+            light,
+            actual_brigntness,
+            leditbe.LIGHT_XY_GREEN
+            if metrics.active_power_w < 0
+            else leditbe.LIGHT_XY_RED,
+        )
 
         logger.info(
             f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}"
