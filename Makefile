@@ -1,4 +1,5 @@
 run:
+	docker buildx build --platform linux/arm -t derogativ/powered:1.4 --load .
 	docker-compose up
 
 push:

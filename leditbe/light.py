@@ -1,12 +1,16 @@
+import os
+
 from phue import Bridge, Light, PhueRegistrationException
 from ipaddress import IPv4Address
 
 from typing import Optional, Callable
 from leditbe.log_configuration import logger
 
+CONFIG_PATH = os.path.join(os.getcwd(), "storage/.python_hue")
+
 
 def _bridge_by_ipaddress(ip_address: IPv4Address) -> Bridge:
-    bridge = Bridge(str(ip_address))
+    bridge = Bridge(str(ip_address), config_file_path=CONFIG_PATH)
     logger.info("Trying to connect to the HUE bridge.. ")
     try:
         bridge.connect()
