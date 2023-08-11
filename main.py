@@ -1,12 +1,10 @@
-from time import sleep
 import click
+from time import sleep
+
+import powered
+import leditbe
 
 from log_configuration import logger
-from powered.discovery import discover_p1_meter
-from powered.operations import get_metrics_from_p1_meter
-from powered.demo import demo_http_handler, demo_poll_for_services
-
-from leditbe.light import find_light
 
 # HUE CONFIG
 HUE_BRIDGE_IP_ADDRESS = "192.168.2.1"
@@ -20,7 +18,7 @@ def main(demo):
         "Powered .. by Ronald Sievers. Open source so feel free to modify and copy as much you'd like."
     )
 
-    light = find_light(HUE_LIGHT_NAME, HUE_BRIDGE_IP_ADDRESS)
+    light = leditbe.find_light(HUE_LIGHT_NAME, HUE_BRIDGE_IP_ADDRESS)
     if not light:
         logger.error(
             f"""Unable to find the target light {HUE_LIGHT_NAME} on hue bridge with ip {HUE_BRIDGE_IP_ADDRESS}. 
@@ -32,8 +30,8 @@ def main(demo):
 
     blink(light)
 
-    p1_meter = discover_p1_meter(
-        polling_function=demo_poll_for_services if demo else None
+    p1_meter = powered.discover_p1_meter(
+        polling_function=powered.demo_poll_for_services if demo else None
     )
     if not p1_meter:
         logger.error("Sorry, unable to locate the device. Are you on the same network?")
@@ -42,8 +40,8 @@ def main(demo):
 
     # for now, lets loop until infinity :D
     while True:
-        metrics = get_metrics_from_p1_meter(
-            p1_meter=p1_meter, http_handler=demo_http_handler if demo else None
+        metrics = powered.get_metrics_from_p1_meter(
+            p1_meter=p1_meter, http_handler=powered.demo_http_handler if demo else None
         )
         logger.info(f"Metrics retrieved: {metrics}")
         sleep(1)
