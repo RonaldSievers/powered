@@ -11,9 +11,13 @@ from config import HueSettings
 
 app_config = HueSettings()
 
+
 if not app_config.light_name or not app_config.bridge_ip_address:
     logger.error("Missing environment configuration. Check the manual.")
     exit(1)
+
+MAX_WATT_VALUE = 3000
+MAX_BRIGHTESS = 255
 
 
 @click.command()
@@ -51,11 +55,9 @@ def main(demo):
             p1_meter=p1_meter, http_handler=powered.demo_http_handler if demo else None
         )
 
-        max_value = 3000
-        max_brightness = 255
-        value = min(max_value, abs(metrics.active_power_w))
-        perc_value = value / max_value
-        actual_brigntness = int(max_brightness * perc_value)
+        value = min(MAX_WATT_VALUE, abs(metrics.active_power_w))
+        perc_value = value / MAX_WATT_VALUE
+        actual_brigntness = int(MAX_BRIGHTESS * perc_value)
 
         leditbe.change_light(
             light,

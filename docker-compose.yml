@@ -2,6 +2,8 @@ version: '3'
 services:
   powered:
     container_name: powered
-    image: "derogativ/powered:1.3"
+    image: "derogativ/powered:1.4"
     restart: unless-stopped
     network_mode: host
+    env_file:
+      - .env
