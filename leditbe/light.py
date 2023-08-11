@@ -1,16 +1,17 @@
 from phue import Bridge, Light, PhueRegistrationException
+from ipaddress import IPv4Address
 
 from typing import Optional
 from leditbe.log_configuration import logger
 
 
-def find_light(light_name: str, bridge_ip_address: str) -> Optional[Light]:
-    b = Bridge(bridge_ip_address)
+def find_light(light_name: str, bridge_ip_address: IPv4Address) -> Optional[Light]:
+    b = Bridge(str(bridge_ip_address))
 
     logger.info("Trying to connect to the HUE bridge.. ")
     try:
         b.connect()
-    except PhueRegistrationException as e:
+    except PhueRegistrationException:
         logger.error(
             "This computer has not been registered with the Hue bridge yet. Press the button on the bridge and then rerun this app within 30 seconds."
         )
@@ -20,7 +21,7 @@ def find_light(light_name: str, bridge_ip_address: str) -> Optional[Light]:
 
     if light_name not in light_names:
         logger.error(
-            "Unable to find the target light. Make sure the name is correctly spelled, and case sensitivity is taken into account."
+            f'Unable to find the target light. Available lights: {", ".join(light_names.keys())}. Make sure the name is correctly spelled, and case sensitivity is taken into account.'
         )
         return None
 
