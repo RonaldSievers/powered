@@ -1,10 +1,16 @@
 from time import sleep
 import click
 
-from powered.log_configuration import logger
+from log_configuration import logger
 from powered.discovery import discover_p1_meter
 from powered.operations import get_metrics_from_p1_meter
 from powered.demo import demo_http_handler, demo_poll_for_services
+
+from leditbe.light import find_light
+
+# HUE CONFIG
+HUE_BRIDGE_IP_ADDRESS = "192.168.2.1"
+HUE_LIGHT_NAME = "Wand"  ## case sensitive
 
 
 @click.command()
@@ -13,6 +19,19 @@ def main(demo):
     logger.info(
         "Powered .. by Ronald Sievers. Open source so feel free to modify and copy as much you'd like."
     )
+
+    light = find_light(HUE_LIGHT_NAME, HUE_BRIDGE_IP_ADDRESS)
+    if not light:
+        logger.error(
+            f"""Unable to find the target light {HUE_LIGHT_NAME} on hue bridge with ip {HUE_BRIDGE_IP_ADDRESS}. 
+            You might need to push the HUE bridge sync button first."""
+        )
+        exit(1)
+
+    from leditbe.operations import blink
+
+    blink(light)
+
     p1_meter = discover_p1_meter(
         polling_function=demo_poll_for_services if demo else None
     )
@@ -23,9 +42,10 @@ def main(demo):
 
     # for now, lets loop until infinity :D
     while True:
-        logger.info(
-            f"Metrics retrieved: {get_metrics_from_p1_meter(p1_meter=p1_meter, http_handler=demo_http_handler if demo else None)}"
+        metrics = get_metrics_from_p1_meter(
+            p1_meter=p1_meter, http_handler=demo_http_handler if demo else None
         )
+        logger.info(f"Metrics retrieved: {metrics}")
         sleep(1)
 
 

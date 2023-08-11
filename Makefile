@@ -4,7 +4,7 @@ run:
 push:
 	black .
 	python -m pytest .	
-	docker buildx build --platform linux/arm -t derogativ/powered:1.2 --push .
+	docker buildx build --platform linux/arm -t derogativ/powered:1.3 --push .
 
 test:
 	black .

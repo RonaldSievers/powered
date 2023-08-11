@@ -8,7 +8,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY /powered/*.py ./powered/
-COPY main.py .
+COPY /leditbe/*.py ./leditbe/
+
+COPY *.py .
 
 CMD python main.py
 
