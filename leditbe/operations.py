@@ -40,6 +40,7 @@ def rgb_to_xy(red, green, blue):
 
 def to_green(light: Light, brightness: int) -> Light:
     light.on = True
+    light.transitiontime = 1
     light.brightness = brightness
     light.xy = rgb_to_xy(0.0, 1.0, 0.8)
     return light
@@ -61,6 +62,7 @@ def blink(light: Light) -> Light:
 
 def to_red(light: Light, brightness: int) -> Light:
     light.on = True
+    light.transitiontime = 1
     light.brightness = brightness
     light.xy = rgb_to_xy(1.0, 0.5, 0.0)
     return light

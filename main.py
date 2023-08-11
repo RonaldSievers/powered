@@ -1,7 +1,7 @@
 import click
 from time import sleep
 
-import powered  # handles communication with p1 meter, autodiscovered
+import powered  # handles communication with p1 meter
 import leditbe  # handles communication with hue bridge
 
 from log_configuration import logger
@@ -11,12 +11,20 @@ from config import HueSettings
 
 app_config = HueSettings()
 
+if not app_config.light_name or not app_config.bridge_ip_address:
+    logger.error("Missing environment configuration. Check the manual.")
+    exit(1)
+
 
 @click.command()
 @click.option("--demo", default=False, is_flag=True, help="If demo mode is enabled")
 def main(demo):
     logger.info(
         "Powered .. by Ronald Sievers. Open source so feel free to modify and copy as much you'd like."
+    )
+
+    logger.info(
+        f"Connecting to bridge at {app_config.bridge_ip_address}, for light '{app_config.light_name}'"
     )
 
     light = leditbe.find_light(app_config.light_name, app_config.bridge_ip_address)
@@ -56,7 +64,9 @@ def main(demo):
             # consuming energy
             leditbe.to_red(light, actual_brigntness)
 
-        logger.info(f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}")
+        logger.info(
+            f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}"
+        )
 
         sleep(1)
 
