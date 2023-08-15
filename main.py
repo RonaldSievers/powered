@@ -12,34 +12,35 @@ from config import HueSettings
 app_config = HueSettings()
 
 
-if not app_config.light_name or not app_config.bridge_ip_address:
-    logger.error("Missing environment configuration. Check the manual.")
-    exit(1)
-
-MAX_WATT_VALUE = 3000
+MAX_WATT_VALUE = 1000
 MAX_BRIGHTESS = 255
 
 
 @click.command()
 @click.option("--demo", default=False, is_flag=True, help="If demo mode is enabled")
 def main(demo):
+    light = None
     logger.info(
         "Powered .. by Ronald Sievers. Open source so feel free to modify and copy as much you'd like."
     )
-
-    logger.info(
-        f"Connecting to bridge at {app_config.bridge_ip_address}, for light '{app_config.light_name}'"
-    )
-
-    light = leditbe.find_light(app_config.light_name, app_config.bridge_ip_address)
-    if not light:
-        logger.error(
-            f"""Unable to find the target light {app_config.light_name} on hue bridge with ip {app_config.bridge_ip_address}. 
-            You might need to push the HUE bridge sync button first."""
+    if not app_config.bridge_ip_address or not app_config.light_name:
+        logger.info("No app configuration provided, running in demo mode")
+        demo = True
+        light = leditbe.MockedLight()
+    else:
+        logger.info(
+            f"Connecting to bridge at {app_config.bridge_ip_address}, for light '{app_config.light_name}'"
         )
-        exit(1)
 
-    leditbe.blink(light)
+        light = leditbe.find_light(app_config.light_name, app_config.bridge_ip_address)
+        if not light:
+            logger.error(
+                f"""Unable to find the target light {app_config.light_name} on hue bridge with ip {app_config.bridge_ip_address}. 
+                You might need to push the HUE bridge sync button first."""
+            )
+            exit(1)
+
+        leditbe.blink(light)
 
     p1_meter = powered.discover_p1_meter(
         polling_function=powered.demo_poll_for_services if demo else None
