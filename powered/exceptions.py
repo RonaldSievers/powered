@@ -5,3 +5,7 @@ class PoweredException(Exception):
 
 class MeterDataParsingException(PoweredException):
     pass
+
+
+class MeterDataConnectionErrorException(PoweredException):
+    pass

@@ -1,3 +1,5 @@
+import logging
+
 import click
 from time import sleep
 
@@ -7,9 +9,9 @@ import ledastic  # handles communication with led strip
 
 from log_configuration import logger
 
-MAX_WATT_VALUE = 2000
-MAX_POWERBAR = 31
-WATT_PER_BAR = 50
+MAX_WATT_VALUE = 2880
+MAX_POWERBAR = 146
+WATT_PER_BAR = 20  # so
 
 
 @click.command()
@@ -28,21 +30,34 @@ def main(demo):
     logger.info(f"P1 Meter found ({p1_meter})")
 
     powerbar = ledastic.PowerBar()
+    powerbar.boot_up()
 
     # for now, lets loop until infinity :D
     while True:
-        metrics = powered.get_metrics_from_p1_meter(
-            p1_meter=p1_meter, http_handler=powered.demo_http_handler if demo else None
-        )
+        try:
+            metrics = powered.get_metrics_from_p1_meter(
+                p1_meter=p1_meter,
+                http_handler=powered.demo_http_handler if demo else None,
+            )
+        except powered.MeterDataConnectionErrorException as e:
+            logging.warning(
+                f"Unable to retrieve metrisc due to connection issues ({e}). Pausing for 5 seconds."
+            )
+            ledastic.blink(ledastic.COLOR_BLUE, 5)
+            sleep(2)
+            continue
 
         actual_brigntness = max(
-            MAX_POWERBAR * -1, min(MAX_POWERBAR, int(metrics.active_power_w / 50))
+            MAX_POWERBAR * -1,
+            min(MAX_POWERBAR, int(metrics.active_power_w / WATT_PER_BAR)),
         )
 
-        powerbar.change_to(actual_brigntness)
+        rest = abs(metrics.active_power_w) - (abs(actual_brigntness) * WATT_PER_BAR)
+
+        powerbar.change_to(actual_brigntness, rest / WATT_PER_BAR)
 
         logger.info(
-            f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}"
+            f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}, rest: {rest / WATT_PER_BAR}"
         )
 
         sleep(1)

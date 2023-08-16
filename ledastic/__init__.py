@@ -1,1 +1,1 @@
-from ledastic.control import PowerBar
+from ledastic.control import PowerBar, blink, COLOR_BLUE

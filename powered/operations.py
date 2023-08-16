@@ -1,6 +1,9 @@
 from requests import request
 from powered.model import P1_meter, ConsumptionMetrics
-from powered.exceptions import MeterDataParsingException
+from powered.exceptions import (
+    MeterDataParsingException,
+    MeterDataConnectionErrorException,
+)
 
 from typing import Dict, Callable, Optional
 
@@ -26,5 +29,8 @@ def get_metrics_from_p1_meter(
         )
     except (ValueError, KeyError) as e:
         raise MeterDataParsingException()
+
+    except ConnectionError as e:
+        raise MeterDataConnectionErrorException()
 
     return api_metrics
