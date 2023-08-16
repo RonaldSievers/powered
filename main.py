@@ -7,14 +7,14 @@ import ledastic  # handles communication with led strip
 
 from log_configuration import logger
 
-MAX_WATT_VALUE = 3000
-MAX_POWERBAR = 30
+MAX_WATT_VALUE = 2000
+MAX_POWERBAR = 31
+WATT_PER_BAR = 50
 
 
 @click.command()
 @click.option("--demo", default=False, is_flag=True, help="If demo mode is enabled")
 def main(demo):
-    demo = True
     logger.info(
         "Powered .. by Ronald Sievers. Open source so feel free to modify and copy as much you'd like."
     )
@@ -35,12 +35,10 @@ def main(demo):
             p1_meter=p1_meter, http_handler=powered.demo_http_handler if demo else None
         )
 
-        value = min(MAX_WATT_VALUE, abs(metrics.active_power_w))
-        perc_value = value / MAX_WATT_VALUE
-        actual_brigntness = int(MAX_POWERBAR * perc_value)
+        actual_brigntness = max(
+            MAX_POWERBAR * -1, min(MAX_POWERBAR, int(metrics.active_power_w / 50))
+        )
 
-        if metrics.active_power_w < 0:
-            actual_brigntness = actual_brigntness * -1
         powerbar.change_to(actual_brigntness)
 
         logger.info(

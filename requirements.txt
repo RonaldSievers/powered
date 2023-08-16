@@ -8,5 +8,8 @@ zeroconf==0.74.0
 requests==2.31.0
 click==8.1.6
 phue==1.1
+
+rpi_ws281x==5.0.0
+adafruit-circuitpython-neopixel==6.3.9
+adafruit-blinka==8.20.1
 RPi.GPIO==0.7.1
-Adafruit-WS2801==1.0.1
