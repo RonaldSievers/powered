@@ -3,32 +3,26 @@ import time
 import board
 import neopixel
 
-from ledastic.log_configuration import logger
-
-
 pixel_pin = board.D18
-num_pixels = 144
+num_pixels = 72
 ORDER = neopixel.GRB
 
 pixels = neopixel.NeoPixel(
-    pixel_pin, num_pixels, brightness=0.5, auto_write=False, pixel_order=ORDER
+    pixel_pin, num_pixels, brightness=0.1, auto_write=False, pixel_order=ORDER
 )
 
 COLOR_BLACK = (0, 0, 0)
-COLOR_RED = (255, 0, 0)
-COLOR_GREEN = (0, 255, 0)
-COLOR_BLUE = (0, 0, 255)
+COLOR_RED = (20, 5, 5)
+COLOR_GREEN = (5, 20, 5)
+COLOR_BLUE = (5, 5, 20)
 
 
 #
-def _display(value, brightness=1.0):
+def _display(value):
     pixels.fill(COLOR_BLACK)
-    color = (255, 0, 0) if value > 0 else (0, 255, 0)
-    adjusted_color = (
-        (int(255 * brightness), 0, 0) if value > 0 else (0, int(255 * brightness), 0)
-    )
+    color = COLOR_RED if value > 0 else COLOR_GREEN
     for i in range(0, abs(value)):
-        pixels[i] = adjusted_color if i == abs(value) - 1 else color
+        pixels[i] = color
     pixels.show()
 
 
@@ -115,13 +109,14 @@ class PowerBar:
         pixels.fill(COLOR_BLACK)
         pixels.show()
 
-    def change_to(self, newvalue, brigthness):
+    def change_to(self, newvalue):
+        _display(newvalue)
         step = 1 if newvalue > self.previous_value else -1
         for i in range(self.previous_value, newvalue, step):
-            _display(i, brigthness)
+            _display(i)
             # make this async
             time.sleep(0.005)
-
+        _display(newvalue)
         self.previous_value = newvalue
 
     def boot_up(self):

@@ -9,9 +9,10 @@ import ledastic  # handles communication with led strip
 
 from log_configuration import logger
 
-MAX_WATT_VALUE = 2880
-MAX_POWERBAR = 146
-WATT_PER_BAR = 20  # so
+
+MAX_POWERBAR = 72
+WATT_PER_BAR = 50  # so
+MAX_WATT_VALUE = MAX_POWERBAR * WATT_PER_BAR
 
 
 @click.command()
@@ -31,6 +32,15 @@ def main(demo):
 
     powerbar = ledastic.PowerBar()
     powerbar.boot_up()
+
+    # while True:
+    #     for n in range(-MAX_POWERBAR, MAX_POWERBAR):
+    #         powerbar.change_to(n)
+    #         sleep(0.05)
+    #
+    #     for n in reversed(range(-MAX_POWERBAR, MAX_POWERBAR)):
+    #         powerbar.change_to(n)
+    #         sleep(0.05)
 
     # for now, lets loop until infinity :D
     while True:
@@ -52,12 +62,12 @@ def main(demo):
             min(MAX_POWERBAR, int(metrics.active_power_w / WATT_PER_BAR)),
         )
 
-        rest = abs(metrics.active_power_w) - (abs(actual_brigntness) * WATT_PER_BAR)
+        # rest = abs(metrics.active_power_w) - (abs(actual_brigntness) * WATT_PER_BAR)
 
-        powerbar.change_to(actual_brigntness, rest / WATT_PER_BAR)
+        powerbar.change_to(actual_brigntness)
 
         logger.info(
-            f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}, rest: {rest / WATT_PER_BAR}"
+            f"Metrics retrieved: {metrics}, actual brightness: {actual_brigntness}"
         )
 
         sleep(1)
